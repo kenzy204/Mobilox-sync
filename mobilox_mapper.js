@@ -183,8 +183,8 @@ async function parseMobiloxVehicleXml(xml) {
 
   // price
   let price = "0.00";
-   const prijsNode = v.verkoopprijs_particulier?.prijs;
-  //const prijsNode = v.verkoopprijs_particulier?.prijzen?.prijs;
+   //const prijsNode = v.verkoopprijs_particulier?.prijs;
+  const prijsNode = v.verkoopprijs_particulier?.prijzen?.prijs;
   //const prijsNode =
   //v.verkoopprijs_particulier?.prijzen?.prijs ??
   //v.verkoopprijs_particulier?.prijs;

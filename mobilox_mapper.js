@@ -182,19 +182,32 @@ async function parseMobiloxVehicleXml(xml) {
   const mobiloxId = v.voertuignr ? String(v.voertuignr).trim() : null;
 
   // price
-  let price = "0.00";
+  //let price = "0.00";
    //const prijsNode = v.verkoopprijs_particulier?.prijs;
-  const prijsNode = v.verkoopprijs_particulier?.prijzen?.prijs;
+  //const prijsNode = v.verkoopprijs_particulier?.prijzen?.prijs;
   //const prijsNode =
   //v.verkoopprijs_particulier?.prijzen?.prijs ??
   //v.verkoopprijs_particulier?.prijs;
 
-  const p = Array.isArray(prijsNode) ? prijsNode[0] : prijsNode;
-  if (p?.bedrag) {
-    const num = Number(String(p.bedrag).replace(",", "."));
-    price = isNaN(num) ? "0.00" : num.toFixed(2);
-  }
+  //const p = Array.isArray(prijsNode) ? prijsNode[0] : prijsNode;
+  //if (p?.bedrag) {
+   // const num = Number(String(p.bedrag).replace(",", "."));
+   // price = isNaN(num) ? "0.00" : num.toFixed(2);
+  //}
+let price = "0.00";
 
+const prijsNode = v.verkoopprijs_particulier?.prijzen?.prijs;
+const p = Array.isArray(prijsNode) ? prijsNode[0] : prijsNode;
+
+const rawBedrag =
+  p?.bedrag?._ ??   // when xml2js wraps value
+  p?.bedrag ??      // normal case
+  null;
+
+if (rawBedrag) {
+  const num = Number(String(rawBedrag).replace(",", "."));
+  price = Number.isNaN(num) ? "0.00" : num.toFixed(2);
+}
   // condition
   const isNew = String(v.nieuw_voertuig || "").toLowerCase() === "j";
   const condition = isNew ? "new" : "used";

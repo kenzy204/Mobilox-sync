@@ -196,17 +196,18 @@ async function parseMobiloxVehicleXml(xml) {
   //}
 let price = "0.00";
 
-const prijsNode = v.verkoopprijs_particulier?.prijzen?.prijs;
-const p = Array.isArray(prijsNode) ? prijsNode[0] : prijsNode;
+const prijzen = v.verkoopprijs_particulier?.prijzen?.prijs;
+const prijsList = Array.isArray(prijzen) ? prijzen : [prijzen];
 
-const rawBedrag =
-  p?.bedrag?._ ??   // when xml2js wraps value
-  p?.bedrag ??      // normal case
-  null;
+for (const p of prijsList) {
+  const raw = p?.bedrag?._ ?? p?.bedrag;
+  if (!raw) continue;
 
-if (rawBedrag) {
-  const num = Number(String(rawBedrag).replace(",", "."));
-  price = Number.isNaN(num) ? "0.00" : num.toFixed(2);
+  const num = Number(String(raw).replace(",", "."));
+  if (!Number.isNaN(num)) {
+    price = num.toFixed(2);
+    break;
+  }
 }
   // condition
   const isNew = String(v.nieuw_voertuig || "").toLowerCase() === "j";
